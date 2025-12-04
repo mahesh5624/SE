@@ -1,1 +1,20 @@
-hello
+sudo apt update
+sudo apt install apache2 -y
+
+sudo nano /var/www/html/index.html
+<h1>Mahesh's Web App deployed successfully on AWS!</h1>
+<p>This is part of my cloud computing assignment.</p>
+sudo systemctl restart apache2
+http://54.242.240.163
+
+
+sudo rm /var/www/html/index.html
+echo "<h1>Mahesh Web App</h1>" | sudo tee -a /var/www/html/index.html
+echo "<p>Deployed successfully on AWS!</p>" | sudo tee -a /var/www/html/index.html
+echo "<p>Cloud Computing Assignment</p>" | sudo tee -a /var/www/html/index.html
+sudo systemctl restart apache2
+
+http://54.242.240.163
+Mahesh Web App
+Deployed successfully on AWS!
+Cloud Computing Assignment
