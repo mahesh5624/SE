@@ -1,1 +1,49 @@
-hello kmit
+https://storage.googleapis.com/minikube/releases/v1.30.1/minikube-windows-amd64.exe
+
+minikube version
+
+minikube start
+
+minikube status
+
+kubectl create deployment webapp --image=nginx
+<<<Then check pod:
+kubectl get pods
+kubectl describe pod -l app=webapp
+<<Scale Pods (from 1 to 3 pods)
+kubectl scale deployment webapp --replicas=3
+<<Then check:
+kubectl get pods
+
+b. Running Nginx server on port + monitoring
+kubectl expose deployment webapp --type=NodePort --port=80
+
+kubectl get svc
+minikube service webapp –url
+
+http://127.0.0.1:30777
+
+kubectl logs -l app=webapp
+kubectl describe pod -l app=webapp
+<<<to run
+kubectl get svc
+minikube service webapp –url
+
+c. Running Nagios server and understanding the monitoring tool using Docker
+docker pull jasonrivers/nagios
+docker run -d --name mynagios -p 8082:80 jasonrivers/nagios
+docker ps
+output:
+CONTAINER ID   IMAGE                 PORTS                 NAMES
+abcd1234...    jasonrivers/nagios    0.0.0.0:8082->80/tcp  mynagios
+
+http://localhost:8082/nagios
+Login:
+Username: nagiosadmin
+
+Password: nagios
+
+
+
+
+
