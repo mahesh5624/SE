@@ -1,1 +1,212 @@
-hello
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Project Coordinates -->
+    <groupId>com.mahesh</groupId>
+    <artifactId>myapp1</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>myapp1</name>
+    <url>http://maven.apache.org</url>
+
+    <!-- Properties -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <!-- ******************************** -->
+    <!--         Dependency Section        -->
+    <!-- ******************************** -->
+    <dependencies>
+
+        <!-- JUnit for Test Cases -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Guava example dependency (for assignment) -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>32.1.2-jre</version>
+        </dependency>
+
+        <!-- Conflict Dependencies (for assignment demo) -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+    </dependencies>
+
+    <!-- ******************************** -->
+    <!--    Dependency Conflict Fix       -->
+    <!-- ******************************** -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.25</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- ******************************** -->
+    <!--             Build Plugins        -->
+    <!-- ******************************** -->
+    <build>
+        <plugins>
+
+            <!-- Executable JAR Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.mahesh.myapp1.App</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- Compiler plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
+
+
+
+
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven_3_9'
+        jdk 'jdk11'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/mahesh5624/project.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat "mvn -B clean package"
+            }
+        }
+
+        stage('Archive Artifacts') {
+            steps {
+                archiveArtifacts artifacts: 'target/*.*ar'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "BUILD SUCCESSFUL!"
+        }
+        failure {
+            echo "BUILD FAILED!"
+        }
+    }
+}
+
+
+
+SUPER-PIPELINE (covers 100% of any question)
+
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'REPO_URL', defaultValue: 'https://github.com/mahesh5624/myapp1.git', description: 'Git repository URL')
+    }
+
+    tools {
+        maven 'Maven_3_9'
+        jdk 'jdk11'
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git "${params.REPO_URL}"
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat "mvn clean package"
+            }
+        }
+
+        stage('Test Reports') {
+            steps {
+                junit 'target/surefire-reports/*.xml'
+            }
+        }
+
+        stage('Archive') {
+            steps {
+                archiveArtifacts artifacts: 'target/*.*ar'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Pipeline completed."
+        }
+    }
+}
+
+
+
+java script
+node {
+    stage('Clone Repository') {
+        git 'https://github.com/mahesh5624/myapp1.git'
+    }
+
+    stage('Build Maven Project') {
+        bat 'mvn clean package -DskipTests'
+    }
+
+    stage('Archive Build Output') {
+        archiveArtifacts artifacts: 'target/*.jar'
+    }
+}
